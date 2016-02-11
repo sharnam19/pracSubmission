@@ -1,11 +1,21 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<title>File Upload Page</title>
-	</head>
-	
-	<body>
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><meta charset="utf-8"><title>File Upload Page</title><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"><link href="css/material.css" rel="stylesheet"><style>#files{
+				display:none;
+			}</style></head><body><form id="myform" method="post" enctype="multipart/form-data"><input id="files" type="file" name="files"> <button type="button" onclick="myclick()" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"><i class="material-icons">add</i></button> <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="mybutton1" value="submit">Submit</button></form><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script><script type="text/javascript" src="js/material.js"></script><script>function myclick(){
+				document.getElementById("files").click();
+			}
+			$("#mybutton1").click(function() {
 
-	</body>
-</html>
+			    var url = "/send"; // the script where you handle the form input.
+
+			    $.ajax({
+			           type: "POST",
+			           url: url,
+			           data: $("#myform").serialize(), // serializes the form's elements.
+			           success: function(data)
+			           {
+			               alert(data); // show response from the php script.
+			           }
+			         });
+
+			    return false; // avoid to execute the actual submit of the form.
+			});</script></body></html>
