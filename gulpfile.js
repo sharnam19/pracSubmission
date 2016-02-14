@@ -16,13 +16,13 @@ var nodemon=require('gulp-nodemon');
 var browserSync=require('browser-sync');
 var BROWSER_SYNC_RELOAD_DELAY=50;
 
-// gulp.task('jsx', function() {
-//   browserify('./src/jsx/Main.jsx')
-//     .transform(reactify)
-//     .bundle()
-//     .pipe(source('App.js'))
-//     .pipe(gulp.dest('./src/js'));
-// });
+gulp.task('jsx', function() {
+  browserify('./src/jsx/FormBox.jsx')
+    .transform(reactify)
+    .bundle()
+    .pipe(source('App.js'))
+    .pipe(gulp.dest('./src/js'));
+});
 
 // gulp.task('jshint', function() {
 //   gulp.src('./src/js/**/*.js')

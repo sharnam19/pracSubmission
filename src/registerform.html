@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>register page</title>
+	<link rel="stylesheet" type="text/css" href="css/material.min.css">
+</head>
+<body>
+	<form id="registerform" method="post" action="/register" enctype="application/x-www-form-urlencoded">
+		<div>
+			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" >
+		        <input class="mdl-textfield__input" type="text" pattern="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" id="registrationNumber" name="registrationNumber"/>
+		        <label class="mdl-textfield__label" for="registrationNumber">Registration Number</label>
+		        <span class="mdl-textfield__error">Input is not valid</span>
+	      	</div>
+      	</div>
+		<div>
+	      	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		        <input class="mdl-textfield__input" type="text" pattern="[A-z]*" id="firstName" name="firstName"/>
+		        <label class="mdl-textfield__label" for="firstName">First Name</label>
+		        <span class="mdl-textfield__error">Input is not valid</span>
+	      	</div>
+      	</div>
+		
+		<div>
+	    	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		        <input class="mdl-textfield__input" type="text" pattern="[A-z]*" id="lastName" name="lastName"/>
+		        <label class="mdl-textfield__label" for="lastName">Last Name</label>
+		        <span class="mdl-textfield__error">Input is not valid</span>
+	      	</div>
+		</div>
+		<div>
+			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+				<input list="branches" class="mdl-textfield__input" id="branch" name="branch"/>
+				  <datalist id="branches">
+				    <option value="Computer Engineering">
+				    <option value="Information Technology">
+				    <option value="Mechanical Engineering">
+				    <option value="Electrical Engineering">
+				    <option value="Electronics Engineering">
+				    <option value="Electronics & Telecommunication Engineering">
+				    <option value="Civil Engineering">
+				    <option value="Production Engineering">
+				    <option value="Textile Engineering">
+				  </datalist>
+				<label class="mdl-textfield__label" for="branch">Branch</label>
+			</div>
+	  	</div>
+	  	<div>
+			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+				<input list="sems" class="mdl-textfield__input" id="semester" value="I" name="semester"/>
+				  <datalist id="sems">
+				    <option value="I">
+				    <option value="II">
+				    <option value="III">
+				    <option value="IV">
+				    <option value="V">
+				    <option value="VI">
+				    <option value="VII">
+				    <option value="VIII">
+				  </datalist>
+			     <label class="mdl-textfield__label" for="semester">Semester</label>
+			</div>
+		</div>  
+		<button class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect" type="submit" value="Submit">Submit</button>
+
+	</form>
+	<script type="text/javascript" src="js/material.min.js"></script>
+</body>
+</html>
