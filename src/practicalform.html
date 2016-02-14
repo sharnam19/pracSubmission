@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<title>Submit Practical Form</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link href="css/material.css" rel="stylesheet">
+
+</head>
+<body>
+<form method="post" id="practicalForm" action="/practical" enctype="application/x-www-form-urlencoded">
+	
+	<div class="mdl-grid">
+		<div class="mdl-cell mdl-cell--12-col">TODO:SUBJECTS FOR A TEACHER COME FROM SERVER</div>
+		
+		<div class="mdl-cell mdl-cell--4-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+			<input list="subjects" class="mdl-textfield__input" id="course" name="course"/>
+			  <datalist id="subjects">
+			    <option value="TOC"/>
+			    <option value="FDS"/>
+			    <option value="Maths"/>
+			  </datalist>
+			<label class="mdl-textfield__label" for="course">Subject</label>
+		</div>
+		<div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    		<textarea class="mdl-textfield__input" type="text" name="question" id="question" cols="80" rows="2"></textarea>
+			<label class="mdl-textfield__label" for="question">Type The Question</label>
+		</div>
+		
+		<div class="mdl-cell mdl-cell--6-col">
+			<div class="mdl-cell mdl-cell--3-col mdl-textfield mdl-js-textfield">
+				<input class="mdl-textfield__input" type="date" id="submissionDate" name="submissionDate"/>
+			</div>
+		</div>
+
+		<div class="mdl-cell mdl-cell--12-col">
+			<button type="submit" value="Submit" class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect">Start A New Practical</button>
+		</div>
+	
+	</div> 
+
+</form>
+
+	<script type="text/javascript" src="js/material.js"></script>
+
+</body>
+
+</html>

@@ -26,10 +26,14 @@ app.post('/register',function (req,res){
 app.post('/login',function (req,res){
 	res.send(req.body);
 });
+app.post('/practical',function(req,res){
+	res.send(req.body);
+});
 
 app.use('/fileupload',express.static(__dirname+'/public/fileupload.html'));
 app.use('/registerform',express.static(__dirname+'/public/registerform.html'));
 app.use('/loginform',express.static(__dirname+'/public/loginform.html'));
+app.use('/practicalform',express.static(__dirname+'/public/practicalform.html'));
 app.use('/',express.static(__dirname+'/public'));
 
 app.listen(3000,function(){
