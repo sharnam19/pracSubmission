@@ -3,6 +3,15 @@
 <head>
 	<title>register page</title>
 	<link rel="stylesheet" type="text/css" href="css/material.min.css">
+	<style>
+		body{
+			background-image:url('images/index.jpg');
+			background-size:cover;
+		}
+		.mdl-textfield--floating-label{
+			color:white;
+		}
+	</style>
 </head>
 <body>
 	<form id="registerform" method="post" action="/register" enctype="application/x-www-form-urlencoded">
@@ -13,6 +22,21 @@
 		        <span class="mdl-textfield__error">Input is not valid</span>
 	      	</div>
       	</div>
+      	<div>
+			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" >
+		        <input class="mdl-textfield__input" type="password" id="password" name="password"/>
+		        <label class="mdl-textfield__label" for="password">Password</label>
+	      	</div>
+      	</div>
+      	
+		<div>
+			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" >
+		        <input class="mdl-textfield__input" type="password" id="confirmPassword" name="confirmPassword"/>
+		        <label class="mdl-textfield__label" for="confirmPassword">Confirm Password</label>
+	      	</div>
+      	</div>
+      	
+
 		<div>
 	      	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 		        <input class="mdl-textfield__input" type="text" pattern="[A-z]*" id="firstName" name="firstName"/>
@@ -30,7 +54,7 @@
 		</div>
 		<div>
 			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-				<input list="branches" class="mdl-textfield__input" id="branch" name="branch"/>
+				<input list="branches" class="mdl-textfield__input" id="branch" name="branch" autocomplete="off" />
 				  <datalist id="branches">
 				    <option value="Computer Engineering">
 				    <option value="Information Technology">
@@ -47,7 +71,7 @@
 	  	</div>
 	  	<div>
 			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-				<input list="sems" class="mdl-textfield__input" id="semester" value="I" name="semester"/>
+				<input list="sems" class="mdl-textfield__input" id="semester" name="semester" autocomplete="off"/>
 				  <datalist id="sems">
 				    <option value="I">
 				    <option value="II">

@@ -5,7 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="css/material.min.css">
 </head>
 <body>
-	<form id="loginform" method="post" action="/login" enctype="application/x-www-form-urlencoded">
+	<form id="loginform" method="post" enctype="application/x-www-form-urlencoded">
 		<div>
 			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" >
 		        <input class="mdl-textfield__input" type="text" pattern="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" id="registrationNumber" name="registrationNumber"/>
@@ -24,5 +24,18 @@
 	</form>
 	<script type="text/javascript" src="js/material.min.js"></script>
 	<script src="js/jquery-2.2.0.min.js"></script>
+	<script type="text/javascript">
+		$("#loginform").submit(function(){
+			$.ajax({
+				url:'/login',
+				type:'POST',
+				data:$("#loginform").serialize(),
+				success:function(data){
+					alert(JSON.stringify(data));
+				}
+			});
+			return false;
+		});
+	</script>
 </body>
 </html>
