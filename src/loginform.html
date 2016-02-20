@@ -3,39 +3,72 @@
 <head>
 	<title>register page</title>
 	<link rel="stylesheet" type="text/css" href="css/material.min.css">
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700" type="text/css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
+<style>
+	body{
+		background-image:url('images/index.jpg');
+		background-size:cover;
+	}
+	.mdl-textfield__input{
+		color:white;
+		border-color:white;
+	}
+	.mdl-textfield__label{
+		color:white;
+	}
+	form{
+		background-color:#201E1E;
+		opacity:0.7;
+		padding:20px;
+		display:inline-block;
+		float:center;
+		margin-left:40vw;
+		margin-top:50px;
+	}
+</style>
 <body>
-	<form id="loginform" method="post" enctype="application/x-www-form-urlencoded">
-		<div>
-			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" >
-		        <input class="mdl-textfield__input" type="text" pattern="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" id="registrationNumber" name="registrationNumber"/>
-		        <label class="mdl-textfield__label" for="registrationNumber">Registration Number</label>
-		        <span class="mdl-textfield__error">Registration Number is not valid</span>
-	      	</div>
-      	</div>
-		<div>
-	      	<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		        <input class="mdl-textfield__input" type="password" id="password" name="password"/>
-		        <label class="mdl-textfield__label" for="password">Password</label>
-	      	</div>
-      	</div>
-		<button class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect" id="loginbutton" type="submit" value="Submit">Login</button>
+	<div class="mdl-grid">
+		<form id="loginform" method="post"  enctype="application/x-www-form-urlencoded"
+				class="mdl-cell mdl-cell--12-col-phone mdl-cell--12-col-tablet mdl-cell--4-col-desktop mdl-cell--4-offset-desktop">
 
-	</form>
+				<div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label" >
+			        <input class="mdl-textfield__input" type="text" pattern="[0-9]{9}" id="registrationNumber" name="registrationNumber"/>
+			        <label class="mdl-textfield__label" for="registrationNumber">Registration Number</label>
+			        <span class="mdl-textfield__error">Registration Number is not valid</span>
+		      	</div>
+			
+		      	<div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+			        <input class="mdl-textfield__input" type="password" id="password" name="password"/>
+			        <label class="mdl-textfield__label" for="password">Password</label>
+		      	</div>
+		      	
+		    		<button class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect" id="loginbutton" type="submit" value="Submit">Login</button>  		
+		      	
+			
+
+		</form>
+	</div>
 	<script type="text/javascript" src="js/material.min.js"></script>
 	<script src="js/jquery-2.2.0.min.js"></script>
 	<script type="text/javascript">
-		$("#loginform").submit(function(){
-			$.ajax({
-				url:'/login',
-				type:'POST',
-				data:$("#loginform").serialize(),
-				success:function(data){
-					alert(JSON.stringify(data));
-				}
-			});
-			return false;
-		});
+		// $("#loginform").submit(function(){
+		// 	if($("#registrationNumber").val().length==9 && $("#password").val().length>=7){
+		// 		$.ajax({
+		// 			url:'/login',
+		// 			type:'POST',
+		// 			data:$("#loginform").serialize(),
+		// 			success:function(data){
+		// 				alert(JSON.stringify(data));
+		// 			}
+		// 		});	
+		// 	}else{
+		// 		alert("Form not validated");
+		// 	}
+			
+		// 	return false;
+		// });
 	</script>
 </body>
 </html>
