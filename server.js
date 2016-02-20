@@ -57,10 +57,33 @@ app.post('/login',function (req,res){
 	});
 });
 
+app.get('/practicals/:course_name',function(req,res){
+	connection.query('SELECT practical_count FROM `courses` where course_name=?',[req.params.course_name], function(err, rows) {
+	  
+	  if(err){
+	  	return res.json("Error Occured, Try Later");
+	  }
+
+	  if(rows.length===0){
+	  	return res.json("No Practicals");
+	  }else{
+	  	return res.json(rows);
+	  }
+	});
+});
+
 app.get('/subjects/:teacher_id',function(req,res){
 	connection.query('SELECT course_name FROM `courses` where teacher_id=?',[req.params.teacher_id], function(err, rows) {
-	  if (err) throw err;
-	  	res.json(rows);
+	  
+	  if(err){
+	  	return res.json("Error Occured, Try Later");
+	  }
+
+	  if(rows.length===0){
+	  	return res.json("No Subjects");
+	  }else{
+	  	return res.json(rows);
+	  }
 	});
 });
 

@@ -15,11 +15,8 @@
 		<div class="mdl-cell mdl-cell--12-col">TODO:SUBJECTS FOR A TEACHER COME FROM SERVER</div>
 		
 		<div class="mdl-cell mdl-cell--4-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-			<input list="subjects" class="mdl-textfield__input" id="course" name="course"/>
+			<input list="subjects" class="mdl-textfield__input" id="course" name="course" autocomplete="off" />
 			  <datalist id="subjects">
-			    <option value="1"/>
-			    <option value="2"/>
-			    <option value="3"/>
 			  </datalist>
 			<label class="mdl-textfield__label" for="course">Subject</label>
 		</div>
@@ -42,8 +39,21 @@
 	</div> 
 
 </form>
-
+	<script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
 	<script type="text/javascript" src="js/material.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$.ajax({
+				url:'/subjects/1',
+				type:'GET',
+				success:function(data){
+					data.map(function(item){
+						$("#subjects").append("<option value='"+item.course_name+"'/>");
+					});
+				}
+			});	
+		});
+	</script>
 
 </body>
 

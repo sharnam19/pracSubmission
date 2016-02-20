@@ -18,30 +18,16 @@
 		<form id="myform" enctype="multipart/form-data" method="post" action="/send">
 			<div>	
 				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-					<input list="subjects" class="mdl-textfield__input" id="subject" name="subject"/>
+					<input list="subjects" class="mdl-textfield__input" id="subject" name="subject" autocomplete="off" />
 					  <datalist id="subjects">
-					    <option value="Subject1"/>
-					    <option value="Subject2"/>
-					    <option value="Subject3"/>
-					    <option value="Subject4"/>
-					    <option value="Subject5"/>
-					    <option value="Subject6"/>
-					    <option value="Subject7"/>
 					  </datalist>
 					<label class="mdl-textfield__label" for="subject">Subject</label>
 				</div>
 			</div>
 			<div>
 				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-					<input list="practicals" class="mdl-textfield__input" id="practicalNumber" name="practicalNumber"/>
+					<input list="practicals" class="mdl-textfield__input" id="practicalNumber" name="practicalNumber" autocomplete="off" />
 					  <datalist id="practicals">
-					    <option value="Practical1"/>
-					    <option value="Practical2"/>
-					    <option value="Practical3"/>
-					    <option value="Practical4"/>
-					    <option value="Practical5"/>
-					    <option value="Practical6"/>
-					    <option value="Practical7"/>
 					  </datalist>
 					<label class="mdl-textfield__label" for="practicalNumber">Practical Number</label>
 				</div>
@@ -66,6 +52,32 @@
 			function myclick(){
 				document.getElementById("files").click();
 			}
+			$(document).ready(function(){
+				$.ajax({
+					url:'/semsubjects/1',
+					type:'GET',
+					success:function(data){
+						data.map(function(item){
+							$("#subjects").append("<option value='"+item.course_name+"'/>");
+						});
+					}
+				});
+				$("#subject").change(function(){
+					$.ajax({
+						url:'/practicals/'+$("#subject").val(),
+						type:'GET',
+						success:function(data){
+							$("#practicals").empty();
+							data.map(function(item){
+								for(var i=1;i<=item.practical_count;i++){
+									$("#practicals").append("<option value='"+i+"'/>");	
+								}
+							});
+						}
+					});
+				});	
+			});
+
 		</script>
 
 	</body>
