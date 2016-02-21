@@ -3,6 +3,7 @@
 				url:'/subjects/1',
 				type:'GET',
 				success:function(data){
+					$("#subjects").empty();
 					data.map(function(item){
 						$("#subjects").append("<option value='"+item.course_name+"'/>");
 					});

@@ -21,6 +21,14 @@ var connection = mysql.createConnection({
 app.post('/send',upload.single('files'),function (req,res) {
 	fs.rename(req.file.path,'files\\'+req.file.originalname,function(error){
 		if(error){
+			fs.stat(req.file.path,function(err,stats){
+				if(stats.isFile()){
+					fs.unlink(req.file.path,function(err){
+						if(err)
+							throw err;
+					});
+				}
+			});
 			res.send("Failed");
 		}else{
 			res.send(JSON.stringify(req.body)+JSON.stringify(req.file.originalname));
@@ -102,24 +110,21 @@ app.get('/semsubjects/:student_id',function(req,res){
 });
 
 app.post('/practical',function(req,res){
-	connection.query('SELECT practical_count FROM `courses` where course_id=?',[req.body.course], function(err, rows) {
+	connection.query('SELECT course_id,practical_count FROM `courses` where course_name=?',[req.body.course], function(err, rows) {
 	  if (err) throw err;
-	  	var lastItem=rows[0].practical_count;
-	  	lastItem++;
-	  	insertPractical(req,res,lastItem);
+	  	insertPractical(rows[0]);
 	});
 	
-	function insertPractical(req,res,lastItem){
-		connection.query('INSERT into `practicals` SET ?',{course_id:req.body.course,submission_date:req.body.submissionDate,question:req.body.question,practical_no:lastItem}, function(err, result) {
+	function insertPractical(item){
+		connection.query('INSERT into `practicals` SET ?',{course_id:item.course_id,submission_date:req.body.submissionDate,question:req.body.question,practical_no:item.practical_count+1}, function(err, result) {
 			  if (err) throw err;
-			  updatePractical(req,res,lastItem);
+			  updatePractical();
 			  return res.json(result);
-		});	
+	});	
 		
-		function updatePractical(req,res,lastItem){
-			  connection.query('UPDATE `courses` SET practical_count=? WHERE course_id=?',[lastItem,req.body.course], function(err, rows) {
+		function updatePractical(){
+			  connection.query('UPDATE `courses` SET practical_count=? WHERE course_id=?',[item.practical_count+1,item.course_id], function(err, rows) {
 			  if (err) throw err;
-
 			});
 		}
 	}
