@@ -16,22 +16,18 @@
 	<body>
 	
 		<form id="myform" enctype="multipart/form-data" method="post" action="/send">
-			<div>	
-				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-					<input list="subjects" class="mdl-textfield__input" id="subject" name="subject" autocomplete="off" />
-					  <datalist id="subjects">
-					  </datalist>
-					<label class="mdl-textfield__label" for="subject">Subject</label>
+				
+				<div>
+					<div class="mdl-textfield mdl-js-textfield">
+					  <select class="mdl-textfield__input" id="subject" name="subject">
+					  </select>
+					</div>
 				</div>
-			</div>
-			<div>
-				<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-					<input list="practicals" class="mdl-textfield__input" id="practicalNumber" name="practicalNumber" autocomplete="off" />
-					  <datalist id="practicals">
-					  </datalist>
-					<label class="mdl-textfield__label" for="practicalNumber">Practical Number</label>
+				
+				<div class="mdl-textfield mdl-js-textfield">
+					<select class="mdl-textfield__input" id="practicalNumber" name="practicalNumber">
+					</select>
 				</div>
-			</div>
 
 			<input id="files" type="file" name="files"/>
 			
@@ -54,24 +50,42 @@
 			}
 			$(document).ready(function(){
 				$.ajax({
-					url:'/semsubjects/141000000',
+					url:'/semsubjects/141070098',
 					type:'GET',
 					success:function(data){
 						data.map(function(item){
-							$("#subjects").append("<option value='"+item.course_name+"'/>");
+							$("#subject").append("<option value='"+item.course_id+"'>"+item.course_name+"</option>");
 						});
+						$("#subject").val(data[0].course_id).change();
 					}
 				});
 				$("#subject").change(function(){
 					$.ajax({
-						url:'/practicals/'+$("#subject").val(),
+						url:'/practicals/'+$("#subject").val()+"&141070098",
 						type:'GET',
 						success:function(data){
-							$("#practicals").empty();
 							data.map(function(item){
-								for(var i=1;i<=item.practical_count;i++){
-									$("#practicals").append("<option value='"+i+"'/>");	
-								}
+								$("#practicalNumber").empty();
+									var i,j;
+									if(item.practical_number==null && item.practical_count===0){
+										$("#practicalNumber").append('<option value=``>No Practicals For Submission</option>');	
+									}else{
+										if(item.practical_number==null){
+											i=1;
+										}else{
+											i=item.practical_number+1;	
+										}		
+										j=i;
+							
+										if(i<=item.practical_count){
+											for(i;i<=item.practical_count;i++){
+												$("#practicalNumber").append("<option value='"+i+"'>"+i+"</option>");	
+											}
+											$("#practicalNumber").val(j).change();		
+										}else{
+											$("#practicalNumber").append('<option value=``>All Submitted</option>');
+										}
+									}
 							});
 						}
 					});

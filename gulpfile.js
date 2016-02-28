@@ -17,11 +17,11 @@ var browserSync=require('browser-sync');
 var BROWSER_SYNC_RELOAD_DELAY=50;
 
 gulp.task('jsx', function() {
-  browserify('./src/jsx/FormBox.jsx')
+  browserify('./src/jsx/Result.jsx')
     .transform(reactify)
     .bundle()
     .pipe(source('App.js'))
-    .pipe(gulp.dest('./src/js'));
+    .pipe(gulp.dest('./public/js'));
 });
 
 // gulp.task('jshint', function() {
@@ -89,9 +89,12 @@ gulp.task('browser-sync', ['nodemon'], function () {
   });
 });
 
-gulp.task('default',['less','html','js'],function(){
+gulp.task('default',['less','html','jsx','js','browser-sync'],function(){
   // gulp.watch('./src/jsx/*.jsx',['jsx']);
   gulp.watch('./src/less/*.less',['less']);
   gulp.watch('./src/*.html',['html']);
+  gulp.watch('./src/jsx/Results/*.jsx',['jsx']);
+  gulp.watch('./src/jsx/*.jsx',['jsx']);
   gulp.watch('./src/js/*.js',['js']);
+
 });

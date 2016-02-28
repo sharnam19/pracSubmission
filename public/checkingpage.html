@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Checking Page</title><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"><link href="css/material.css" rel="stylesheet"></head><body><div class="mdl-grid"><div class="mdl-cell mdl-cell--8-col-desktop mdl-cell--12-col-phone mdl-cell--12-col-tablet mdl-cell--2-offset-desktop"><form method="post" id="checkingform" enctype="application/x-www-form-urlencoded"><div class="mdl-grid"><div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label"><select class="mdl-textfield__input" id="course" name="course"></select></div><div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label"><select class="mdl-textfield__input" id="practicalNumber" name="practicalNumber"></select></div></div></form><div id="items"></div><div id="item2"></div></div></div><script type="text/javascript" src="js/jquery-2.2.0.min.js"></script><script type="text/javascript" src="js/App.js"></script><script type="text/javascript" src="js/material.js"></script><script type="text/javascript">$(document).ready(function(){
+			$.ajax({
+				url:'/subjects/2',
+				type:'GET',
+				success:function(data){
+					$("#course").empty();
+					data.map(function(item){
+						$("#course").append("<option value="+item.course_id+">"+item.course_name+"</option>");
+					});
+					$("#course").val(data[0].course_id).change();
+				}
+			});
+			$("#course").change(function(){
+					$.ajax({
+						url:'/practicalcount/'+$("#course").val(),
+						type:'GET',
+						success:function(data){
+							data.map(function(item){
+								$("#practicalNumber").empty();
+									if(item.practical_count===0){
+										$("#practicalNumber").append('<option value=``>No Practical For Checking</option>');	
+										$("#practicalNumber").val('').change();
+									}else{
+										for(var i=1;i<=item.practical_count;i++){
+											$("#practicalNumber").append('<option value='+i+'>'+i+'</option>');		
+										}
+										$("#practicalNumber").val(1).change();
+									}
+							});
+
+							
+						}
+					});
+				});
+				$("#practicalNumber").change(function(){
+					if($('#practicalNumber').val()!==''){
+						$.ajax({
+							url:'/results/'+$("#course").val()+'&'+$("#practicalNumber").val(),
+							type:'GET',
+							success:function(data){
+								$("#items").empty();
+								$("#items").append(JSON.stringify(data));
+							}
+						});	
+					}else{
+						$("#items").empty();
+						$("#items").append("NO Results TO Display");
+					}
+					
+				});		
+		});</script></body></html>
