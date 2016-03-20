@@ -19136,7 +19136,9 @@ var CheckingPage=React.createClass({displayName: "CheckingPage",
 							)
 						)
 				), 
-				res
+				React.createElement("div", {className: "mdl-cell--12-col-desktop mdl-cell--4-col-phone mdl-cell--8-col-tablet"}, 
+					res
+				)
 			)
 			
 
@@ -19160,14 +19162,9 @@ var Result=React.createClass({displayName: "Result",
 	},
 	componentDidMount:function(){
 		this.serverRequest = $.get('/results/'+this.props.courseId+'&'+this.props.pracNumber, function (result) {
-	    	if(result.length>0){
-	    		console.log(result);
 				this.setState({
 	        		data:result
 	     		 });			
-    		}else{
-    			alert("No results!");
-    		}
 	    }.bind(this));
 	},
 	componentWillReceiveProps:function(nextProps){

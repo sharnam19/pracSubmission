@@ -96,7 +96,9 @@ var CheckingPage=React.createClass({
 							</div>
 						</form>
 				</div>
-				{res}
+				<div className="mdl-cell--12-col-desktop mdl-cell--4-col-phone mdl-cell--8-col-tablet">
+					{res}
+				</div>
 			</div>
 			
 

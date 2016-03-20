@@ -10,14 +10,9 @@ var Result=React.createClass({
 	},
 	componentDidMount:function(){
 		this.serverRequest = $.get('/results/'+this.props.courseId+'&'+this.props.pracNumber, function (result) {
-	    	if(result.length>0){
-	    		console.log(result);
 				this.setState({
 	        		data:result
 	     		 });			
-    		}else{
-    			alert("No results!");
-    		}
 	    }.bind(this));
 	},
 	componentWillReceiveProps:function(nextProps){
