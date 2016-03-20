@@ -19033,19 +19033,165 @@ module.exports = require('./lib/React');
 },{"./lib/React":26}],159:[function(require,module,exports){
 var React=require('react');
 var ReactDOM=require('react-dom');
+var CheckingPage=require('./CheckingPage.jsx');
+
+ReactDOM.render(React.createElement(CheckingPage, null),document.getElementById("item2"));
+
+},{"./CheckingPage.jsx":160,"react":158,"react-dom":2}],160:[function(require,module,exports){
+var React=require('react');
+var Result=require('./Result.jsx');
+var CheckingPage=React.createClass({displayName: "CheckingPage",
+	getInitialState:function(){
+		return{
+			data:null,
+			activePosition:-1,
+			activePractical:-1
+		}
+	},
+	componentDidMount:function(){
+	    this.serverRequest = $.get('/sub_cnt/2', function (result) {
+	    	if(result.length>0){
+				this.setState({
+	        		data:result,
+		        	activePosition:0,
+		        	activePractical:result[0].practical_count
+	     		 });			
+    		}else{
+    			alert("No results!");
+    		}
+	    }.bind(this));
+	},
+	subjectChange:function(event){
+		var i=0;
+		while(i<this.state.data.length){
+			if(this.state.data[i].course_id===parseInt(event.target.value)){
+				if(this.state.data[i].practical_count>0){
+					this.setState({activePosition:i,activePractical:this.state.data[i].practical_count});	
+				}else{
+					this.setState({activePosition:i,activePractical:0});
+				}
+				break;
+			}else{
+				i++;
+			}
+		}
+	},
+	practicalChange:function(event){
+		this.setState({activePractical:parseInt(event.target.value)});
+	},
+	render:function(){
+		var courseNames=null;
+		if(this.state.data===null){
+
+		}else{
+			courseNames=this.state.data.map(function(item,i){
+				return(
+					React.createElement("option", {key: i, value: item.course_id}, item.course_name)
+				);
+			});
+		}
+		var value=null;
+		var practicalNumber=[];
+		var practicalCount;
+		var i=1;
+		if(this.state.activePosition===-1){
+			value=null;
+		}else{
+			value=this.state.data[this.state.activePosition].course_id;
+			while(i<=this.state.data[this.state.activePosition].practical_count){
+				practicalNumber[i-1]=i;
+				i++;
+			}
+			if(practicalNumber.length>=0){
+				practicalCount=practicalNumber.map(function(item,i){
+					return(
+						React.createElement("option", {key: i, value: item}, item)
+					);
+				});	
+			}
+		}
+
+		var res;
+		if(this.state.activePosition===-1 || this.state.activePractical===0){
+			res=React.createElement("h4", null, "NO Results")
+		}else{
+			res=React.createElement(Result, {courseId: this.state.data[this.state.activePosition].course_id, pracNumber: this.state.activePractical});
+		}
+		
+		return(
+			React.createElement("div", {className: "mdl-cell mdl-cell--12-col"}, 
+				React.createElement("div", {className: "mdl-cell mdl-cell--6-col-desktop mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--3-offset-desktop"}, 
+						React.createElement("form", {method: "post", id: "checkingform", encType: "application/x-www-form-urlencoded"}, 
+								
+							React.createElement("div", {className: "mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label"}, 
+								  React.createElement("select", {className: "mdl-textfield__input", id: "course", onChange: this.subjectChange, name: "course", value: value}, 
+								  	courseNames
+								  )
+							), 
+							
+							React.createElement("div", {className: "mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label"}, 
+								  React.createElement("select", {className: "mdl-textfield__input", id: "practicalNumber", onChange: this.practicalChange, name: "practicalNumber", value: this.state.activePractical}, 
+								  	practicalCount
+								  )
+							)
+						)
+				), 
+				res
+			)
+			
+
+		);
+	}
+
+});
+
+module.exports=CheckingPage;
+
+},{"./Result.jsx":161,"react":158}],161:[function(require,module,exports){
+var React=require('react');
+var ReactDOM=require('react-dom');
 
 var ResultItem=require('./Results/ResultItem.jsx');
-//var CheckingPage=require('./CheckingPage.jsx');
 var Result=React.createClass({displayName: "Result",
+	getInitialState:function(){
+		return{
+			data:null
+		}
+	},
+	componentDidMount:function(){
+		this.serverRequest = $.get('/results/'+this.props.courseId+'&'+this.props.pracNumber, function (result) {
+	    	if(result.length>0){
+	    		console.log(result);
+				this.setState({
+	        		data:result
+	     		 });			
+    		}else{
+    			alert("No results!");
+    		}
+	    }.bind(this));
+	},
+	componentWillReceiveProps:function(nextProps){
+		this.serverRequest = $.get('/results/'+nextProps.courseId+'&'+nextProps.pracNumber, function (result) {
+			this.setState({
+	    		data:result
+	 		 });			
+	    }.bind(this));	
+	},
 	render:function(){
-		var resultItems=this.props.list.map(function(item,i){
-			return(
-				React.createElement(ResultItem, {key: i, item: item})
-			);
-		});
+		var resultItems=React.createElement("h4", null, "No Results To Show");
+		if(this.state.data!==null){
+			resultItems=this.state.data.map(function(item,i){
+				return(
+					React.createElement(ResultItem, {key: i, item: item})
+				);
+			});	
+		}
+		
 		return(
-			React.createElement("div", {className: "mdl-grid"}, 
-				resultItems
+			React.createElement("div", {className: "mdl-cell mdl-cell--12-col-desktop mdl-cell--4-col-phone mdl-cell--8-col-tablet"}, 
+				React.createElement("div", {className: "mdl-grid"}, 
+					resultItems
+				)
 			)
 		);
 	}
@@ -19055,26 +19201,28 @@ var item={
 	"file_path":"Hello",
 	"marks":5,
 	"student_id":"141070098",
-	"practical_id":"1",
+	"practical_id":1,
 	"date":"24/02/2016"
 }
-
-ReactDOM.render(React.createElement("div", {className: "mdl-grid"}, React.createElement(ResultItem, {url: "Hello", marks: 5}), React.createElement(ResultItem, {url: "Hello", marks: 5}), React.createElement(ResultItem, {marks: 5, url: "Hello"}), React.createElement(ResultItem, {marks: 5, url: "Hello"})),document.getElementById("item2"));
-},{"./Results/ResultItem.jsx":160,"react":158,"react-dom":2}],160:[function(require,module,exports){
+module.exports=Result;
+},{"./Results/ResultItem.jsx":162,"react":158,"react-dom":2}],162:[function(require,module,exports){
 var React=require('react');
 
 var ResultItem=React.createClass({displayName: "ResultItem",
 	 getInitialState: function(){
         return {
             stateButtonClicked:false,
-            value:this.props.marks
+            value:this.props.item.marks
         };
     },
 	clicked:function(){
-		window.location=this.props.url;
+		window.location=this.props.item.file_path;
 	},
 	buttonClicked:function(){
 		this.setState({stateButtonClicked:true});
+	},
+	componentWillReceiveProps:function(nextProps){
+		this.setState({value:nextProps.item.marks});
 	},
 	componentDidUpdate:function(){
 		componentHandler.upgradeDom();
@@ -19084,13 +19232,42 @@ var ResultItem=React.createClass({displayName: "ResultItem",
 	},
 	changeMarks:function(){
 		$.ajax({
-			url:'/update/1&141070098&'+this.state.value,
+			url:'/update/'+this.props.item.practical_id+'&'+this.props.item.student_id+'&'+this.state.value,
 			type:'POST',
 			success:function(data){
 				this.setState({value:this.state.value});
 			}
 		});
 		this.setState({stateButtonClicked:false});
+	},
+	getMonth:function(month){
+		switch(month){
+			case 0:
+				return 'JAN';
+			case 1:
+				return 'FEB';
+			case 2:
+				return 'MAR';
+			case 3:
+				return 'APR';
+			case 4:
+				return 'MAY';
+			case 5:
+				return 'JUNE';
+			case 6:
+				return 'JULY';
+			case 7:
+				return 'AUG';
+			case 8:
+				return 'SEPT';
+			case 9:
+				return 'OCT';
+			case 10:
+				return 'NOV';
+			case 11:
+				return 'DEC';
+
+		}
 	},
 	render:function(){
 
@@ -19101,12 +19278,13 @@ var ResultItem=React.createClass({displayName: "ResultItem",
 		}else{
 			mydiv=
 				React.createElement("div", {className: "mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label"}, 
-			    	React.createElement("input", {onChange: this.updateMarks, onBlur: this.changeMarks, className: "mdl-textfield__input", type: "Number", ref: "input", id: this.props.url, value: this.state.value}), 
-			    	React.createElement("label", {className: "mdl-textfield__label", htmlFor: this.props.url}, "Grade"), 
+			    	React.createElement("input", {onChange: this.updateMarks, onBlur: this.changeMarks, className: "mdl-textfield__input", type: "Number", ref: "input", id: this.props.item.file_path, value: this.state.value}), 
+			    	React.createElement("label", {className: "mdl-textfield__label", htmlFor: this.props.item.file_path}, "Grade"), 
 			    	React.createElement("span", {className: "mdl-textfield__error"}, "Invalid")
 		    	);
 		}
-
+		var date=new Date(''+this.props.item.date);
+		
  		return(
 			React.createElement("div", {className: "mdl-cell mdl-cell--2-col-desktop mdl-cell--2-col-phone mdl-cell--2-col-tablet"}, 
 				React.createElement("div", {className: "resultItem", onClick: this.clicked}, 
@@ -19115,9 +19293,9 @@ var ResultItem=React.createClass({displayName: "ResultItem",
 					), 
 					React.createElement("div", {className: "resultDetails"}, 
 						React.createElement("div", null, 
-							React.createElement("b", null, "141070040"), 
+							React.createElement("b", null, this.props.item.student_id), 
 							React.createElement("br", null), 
-							React.createElement("b", null, "24 March 2016"), 
+							React.createElement("b", null, date.getDate()+'-'+this.getMonth(date.getMonth())+'-'+date.getFullYear()), 
 							React.createElement("br", null), 
 							React.createElement("b", null, this.state.value)
 						)

@@ -17,7 +17,7 @@ var browserSync=require('browser-sync');
 var BROWSER_SYNC_RELOAD_DELAY=50;
 
 gulp.task('jsx', function() {
-  browserify('./src/jsx/Result.jsx')
+  browserify('./src/jsx/App.jsx')
     .transform(reactify)
     .bundle()
     .pipe(source('App.js'))

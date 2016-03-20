@@ -69,7 +69,7 @@ app.post('/send',upload.single('files'),function (req,res) {
 					deleteFile(req.file.path);			
 					res.send("Failed");
 				}else{
-					var query="INSERT INTO submissions (student_id,file_path,practical_id) VALUES (?,?, "+
+					var query="INSERT INTO submissions (student_id,file_path,practical_id,date) VALUES (?,?,getDate(), "+
 							   "(SELECT id FROM practicals WHERE course_id=? and practical_no=?))";		
 					connection.query(query,['141070098',path+req.file.originalname,req.body.subject,req.body.practicalNumber],function(err,result){
 						if(err){
@@ -184,8 +184,8 @@ app.get('/subjects/:teacher_id',function(req,res){
 	});
 });
 
-app.get('/sub&cnt/:teacher_id',function(req,res){
-	var query="SELECT course_name,course_id,practical_count FROM 'courses' WHERE teacher_id=?";
+app.get('/sub_cnt/:teacher_id',function(req,res){
+	var query="SELECT course_name,course_id,practical_count FROM courses WHERE teacher_id=?";
 	connection.query(query,[req.params.teacher_id],function(err,rows){
 		if(err){
 			res.json('err');

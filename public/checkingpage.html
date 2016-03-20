@@ -1,6 +1,20 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Checking Page</title><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"><link href="css/material.css" rel="stylesheet"><link href="css/app.css" rel="stylesheet"><style>body{
 			background:#F2F2F2;
-			}</style></head><body><div class="mdl-grid"><div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--3-offset-desktop"><form method="post" id="checkingform" enctype="application/x-www-form-urlencoded"><div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label"><select class="mdl-textfield__input" id="course" name="course"></select></div><div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label"><select class="mdl-textfield__input" id="practicalNumber" name="practicalNumber"></select></div></form></div><div id="items"></div><div id="item2" class="mdl-cell mdl-cell--12-col-desktop mdl-cell--4-col-phone mdl-cell--8-col-tablet"></div></div><script type="text/javascript" src="js/jquery-2.2.0.min.js"></script><script type="text/javascript" src="js/App.js"></script><script type="text/javascript" src="js/material.js"></script><script type="text/javascript">$(document).ready(function(){
+			}</style></head><body><div id="item2" class="mdl-grid"></div><!--<div class="mdl-cell mdl-cell--6-col-desktop mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--3-offset-desktop">
+					<form method="post" id="checkingform" enctype="application/x-www-form-urlencoded">
+							
+						<div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							  <select class="mdl-textfield__input" id="course" name="course">
+							  </select>
+						</div>
+						
+						<div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							  <select class="mdl-textfield__input" id="practicalNumber" name="practicalNumber">
+							  </select>
+						</div>
+					</form>
+				</div>--><script type="text/javascript" src="js/jquery-2.2.0.min.js"></script><script type="text/javascript" src="js/App.js"></script><script type="text/javascript" src="js/material.js"></script><!--<script type="text/javascript">
+		$(document).ready(function(){
 			$.ajax({
 				url:'/subjects/2',
 				type:'GET',
@@ -47,4 +61,5 @@
 						$("#items").append("NO Results TO Display");
 					}
 				});		
-		});</script></body></html>
+		});
+		</script>--></body></html>
