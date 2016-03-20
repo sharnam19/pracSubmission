@@ -19035,24 +19035,97 @@ var React=require('react');
 var ReactDOM=require('react-dom');
 
 var ResultItem=require('./Results/ResultItem.jsx');
+//var CheckingPage=require('./CheckingPage.jsx');
+var Result=React.createClass({displayName: "Result",
+	render:function(){
+		var resultItems=this.props.list.map(function(item,i){
+			return(
+				React.createElement(ResultItem, {key: i, item: item})
+			);
+		});
+		return(
+			React.createElement("div", {className: "mdl-grid"}, 
+				resultItems
+			)
+		);
+	}
+});
 
-ReactDOM.render(React.createElement(ResultItem, null),document.getElementById("item2"));
+var item={
+	"file_path":"Hello",
+	"marks":5,
+	"student_id":"141070098",
+	"practical_id":"1",
+	"date":"24/02/2016"
+}
+
+ReactDOM.render(React.createElement("div", {className: "mdl-grid"}, React.createElement(ResultItem, {url: "Hello", marks: 5}), React.createElement(ResultItem, {url: "Hello", marks: 5}), React.createElement(ResultItem, {marks: 5, url: "Hello"}), React.createElement(ResultItem, {marks: 5, url: "Hello"})),document.getElementById("item2"));
 },{"./Results/ResultItem.jsx":160,"react":158,"react-dom":2}],160:[function(require,module,exports){
 var React=require('react');
 
 var ResultItem=React.createClass({displayName: "ResultItem",
+	 getInitialState: function(){
+        return {
+            stateButtonClicked:false,
+            value:this.props.marks
+        };
+    },
+	clicked:function(){
+		window.location=this.props.url;
+	},
+	buttonClicked:function(){
+		this.setState({stateButtonClicked:true});
+	},
+	componentDidUpdate:function(){
+		componentHandler.upgradeDom();
+	},
+	updateMarks:function(event){
+			this.setState({value:event.target.value});
+	},
+	changeMarks:function(){
+		$.ajax({
+			url:'/update/1&141070098&'+this.state.value,
+			type:'POST',
+			success:function(data){
+				this.setState({value:this.state.value});
+			}
+		});
+		this.setState({stateButtonClicked:false});
+	},
 	render:function(){
-		box={};
-		box.background="black";
-		box.color="white";
-		box.textAlign="center";
 
-		var color={};
-		color.background="#aaaaaa";
-		return(
-			React.createElement("div", {className: "mdl-cell mdl-cell--12-col-phone mdl-cell--4-col-tablet mdl-cell--3-col-desktop", style: box}, 
-				React.createElement("h4", null, "141070040")
-				
+		var mydiv;
+		
+		if(this.state.stateButtonClicked===false){
+			mydiv=React.createElement("button", {className: "mdl-cell mdl-cell--12-col mdl-js-ripple-effect mdl-button mdl-js-button resultButton", onClick: this.buttonClicked}, "Grade");
+		}else{
+			mydiv=
+				React.createElement("div", {className: "mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label"}, 
+			    	React.createElement("input", {onChange: this.updateMarks, onBlur: this.changeMarks, className: "mdl-textfield__input", type: "Number", ref: "input", id: this.props.url, value: this.state.value}), 
+			    	React.createElement("label", {className: "mdl-textfield__label", htmlFor: this.props.url}, "Grade"), 
+			    	React.createElement("span", {className: "mdl-textfield__error"}, "Invalid")
+		    	);
+		}
+
+ 		return(
+			React.createElement("div", {className: "mdl-cell mdl-cell--2-col-desktop mdl-cell--2-col-phone mdl-cell--2-col-tablet"}, 
+				React.createElement("div", {className: "resultItem", onClick: this.clicked}, 
+					React.createElement("div", {className: "resultImage"}, 
+						React.createElement("img", {id: "img", src: "images/fileicon_black.png"})
+					), 
+					React.createElement("div", {className: "resultDetails"}, 
+						React.createElement("div", null, 
+							React.createElement("b", null, "141070040"), 
+							React.createElement("br", null), 
+							React.createElement("b", null, "24 March 2016"), 
+							React.createElement("br", null), 
+							React.createElement("b", null, this.state.value)
+						)
+					)
+				), 
+				React.createElement("div", {className: "mdl-grid--no-spacing"}, 
+					mydiv
+				)
 			)
 		);
 	}

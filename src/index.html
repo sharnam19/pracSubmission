@@ -9,6 +9,9 @@
 		<link href="css/app.css" rel="stylesheet">
 	</head>
 	<style>
+		::webkit-scrollbar{
+			display:none;
+		}
 		.mdl-layout{
 			background-image:url('images/index.jpg');
 			background-size:cover;
@@ -40,6 +43,7 @@
 			float:right;
 			color:white;
 		}
+		
 	</style>
 	
 	<body>
@@ -63,14 +67,15 @@
 		<div class="mdl-grid" id="student">
 				<form class="mdl-cell mdl-cell--12-col-phone mdl-cell--12-col-tablet mdl-cell--4-col-desktop mdl-cell--4-offset-desktop" id="loginform" method="post" action="/login" enctype="application/x-www-form-urlencoded">
 						<div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label" >
-					        <input class="mdl-textfield__input" type="text" pattern="[0-9]{9}" id="registrationNumber" name="registrationNumber"/>
+					        <input class="mdl-textfield__input" type="text" pattern="[0-9]{9}" id="loginRegistrationNumber" name="registrationNumber"/>
 					        <label class="mdl-textfield__label" for="registrationNumber">Registration Number</label>
-					        <span class="mdl-textfield__error">Registration Number is not valid</span>
+					        <span class="mdl-textfield__error">Must contain 9 numbers</span>
 				      	</div>
 					
 				      	<div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-					        <input class="mdl-textfield__input" type="password" id="password" name="password"/>
+					        <input class="mdl-textfield__input" pattern="[A-z|0-9|!|@|#|$|%|^|&|*|(|)]{7,}" type="password" id="loginPassword" name="password"/>
 					        <label class="mdl-textfield__label" for="password">Password</label>
+					        <span class="mdl-textfield__error">Minimum length of 7</span>
 				      	</div>
 			      	
 					<button class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect" id="loginbutton" type="submit" value="Submit">Login</button>
@@ -80,31 +85,33 @@
 
 				<form class="mdl-cell mdl-cell--12-col-phone mdl-cell--12-col-tablet mdl-cell--4-col-desktop mdl-cell--4-offset-desktop" id="registerform" method="post" action="/register" enctype="application/x-www-form-urlencoded">
 			<div class="mdl-cell mdl-cell--12-col-phone mdl-cell--12-col-tablet mdl-cell--6-col-desktop mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		        <input class="mdl-textfield__input" type="text" pattern="[A-z]*" id="firstName" name="firstName"/>
+		        <input class="mdl-textfield__input" type="text" pattern="[A-z]*" id="registerFirstName" name="firstName"/>
 		        <label class="mdl-textfield__label" for="firstName">First Name</label>
-		        <span class="mdl-textfield__error">Input is not valid</span>
+		        <span class="mdl-textfield__error">First Name should not be empty</span>
 	      	</div>
 
 	    	<div class="mdl-cell mdl-cell--12-col-phone mdl-cell--12-col-tablet mdl-cell--6-col-desktop mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		        <input class="mdl-textfield__input" type="text" pattern="[A-z]*" id="lastName" name="lastName"/>
+		        <input class="mdl-textfield__input" type="text" pattern="[A-z]*" id="registerLastName" name="lastName"/>
 		        <label class="mdl-textfield__label" for="lastName">Last Name</label>
-		        <span class="mdl-textfield__error">Input is not valid</span>
+		        <span class="mdl-textfield__error">Last Name should not be empty</span>
 	      	</div>
 		
 			<div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label" >
-		        <input class="mdl-textfield__input" type="text" pattern="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" id="registrationNumber" name="registrationNumber"/>
+		        <input class="mdl-textfield__input" type="text" pattern="[0-9]{9}" id="registerRegistrationNumber" name="registrationNumber"/>
 		        <label class="mdl-textfield__label" for="registrationNumber">Registration Number</label>
-		        <span class="mdl-textfield__error">Input is not valid</span>
+		        <span class="mdl-textfield__error">Must contain 9 Numbers</span>
 	      	</div>
 				
 			<div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label" >
-		        <input class="mdl-textfield__input" type="password" id="password" name="password"/>
+		        <input class="mdl-textfield__input" type="password" pattern="[A-z|0-9|!|@|#|$|%|^|&|*|(|)]{7,}" id="registerPassword" name="password"/>
 		        <label class="mdl-textfield__label" for="password">Password</label>
+		        <span class="mdl-textfield__error">Minimum length of 7</span>
 	      	</div>
 			
 			<div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label" >
-		        <input class="mdl-textfield__input" type="password" id="confirmPassword" name="confirmPassword"/>
+		        <input class="mdl-textfield__input" type="password" pattern="[A-z|0-9|!|@|#|$|%|^|&|*|(|)]{7,}" id="confirmPassword" name="confirmPassword"/>
 		        <label class="mdl-textfield__label" for="confirmPassword">Confirm Password</label>
+		        <span class="mdl-textfield__error">Must match with Password field</span>
 	      	</div>
 
 	      	
@@ -145,14 +152,15 @@
 		<div id="teacher" class="mdl-grid">
 			<form class="mdl-cell mdl-cell--12-col-phone mdl-cell--12-col-tablet mdl-cell--4-col-desktop mdl-cell--4-offset-desktop" id="teacherloginform" method="post" action="/teacherlogin" enctype="application/x-www-form-urlencoded">
 				<div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label" >
-			        <input class="mdl-textfield__input" type="text"  id="registrationNumber" name="registrationNumber"/>
+			        <input class="mdl-textfield__input" type="text" pattern="[0-9]{9}" id="teacherRegistrationNumber" name="registrationNumber"/>
 			        <label class="mdl-textfield__label" for="registrationNumber">Teacher Registration Number</label>
 			        <span class="mdl-textfield__error">Registration Number is not valid</span>
 		      	</div>
 			
 		      	<div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-			        <input class="mdl-textfield__input" type="password" id="password" name="password"/>
+			        <input class="mdl-textfield__input" pattern="[A-z|0-9|!|@|#|$|%|^|&|*|(|)]{7,}" type="password" id="teacherPassword" name="password"/>
 			        <label class="mdl-textfield__label" for="password">Password</label>
+			        <span class="mdl-textfield__error">Minimum length of 7</span>
 		      	</div>
 	      	
 			<button class="mdl-cell mdl-cell--12-col mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect" id="loginbutton" type="submit" value="Submit">Login</button>
@@ -167,6 +175,9 @@
 		<script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
 		<script type="text/javascript" src="js/material.js"></script>
 		<script>
+			function addError(id){
+				$(id).parent().addClass("is-invalid is-dirty");
+			}
 			$("#login").click(function(){
 				$("#loginform").show(750);
 				$("#registerform").hide(750);
@@ -176,33 +187,83 @@
 				$("#loginform").hide(750);
 			});
 			$("#loginform").submit(function(){
-				if($("#registrationNumber").val().length==9 && $("#password").val().length>=7){
-					$.ajax({
-						url:'/login',
-						type:'POST',
-						data:$("#loginform").serialize(),
-						success:function(data){
-							alert(JSON.stringify(data));
-						}
-					});	
+				if($("#loginRegistrationNumber").val().length===9){
+					if($("#loginPassword").val().length>=7){
+						$.ajax({
+							url:'/login',
+							type:'POST',
+							data:$("#loginform").serialize(),
+							success:function(data){
+								alert(JSON.stringify(data));
+							}
+						});	
+					}else{
+						addError("#loginPassword");
+					}	
 				}else{
-					alert("Form not validated");
+					addError("#loginRegistrationNumber");
 				}
 				
 			return false;
 			});
+			
 			$("#registerform").submit(function(){
-					$.ajax({
-						url:'/register',
-						type:'POST',
-						data:$("#registerform").serialize(),
-						success:function(data){
-							alert(JSON.stringify(data));
+					if($("#registerFirstName").val().length!==0){
+						if($("#registerLastName").val().length!==0){
+							if($("#registerRegistrationNumber").val().length===9){
+								if($("#registerPassword").val().length>=7){
+									if($("#confirmPassword").val().length>=7){
+										if($("#registerPassword").val()===$("#confirmPassword").val()){
+											$.ajax({
+												url:'/register',
+												type:'POST',
+												data:$("#registerform").serialize(),
+												success:function(data){
+													alert(JSON.stringify(data));
+												}
+											});	
+										}else{
+											addError("#confirmPassword");
+										}
+									}else{
+										addError("#confirmPassword");
+									}
+								}else{
+									addError("#registerPassword");
+								}
+							}else{
+								addError("#registerRegistrationNumber");
+							}
+						}else{
+							addError("#registerLastName");
 						}
-					});	
-				
+					}else{
+						addError("#registerFirstName");
+					} 
+					
 			return false;
 			});
+
+			$("#teacherloginform").submit(function(){
+				if($("#teacherRegistrationNumber").val().length===9){
+					if($("#teacherPassword").val().length!==0){
+						$.ajax({
+							url:'/teacherlogin',
+							type:'POST',
+							data:$("#loginform").serialize(),
+							success:function(data){
+								alert(JSON.stringify(data));
+							}
+						});
+					}else{
+						addError("#teacherPassword");
+					}
+				}else{
+					addError("#teacherRegistrationNumber");
+				}
+				return false;
+			});
+
 			$("#teacherTab").click(function(){
 				$("#teacher").show(750);
 				$("#student").hide(750);
