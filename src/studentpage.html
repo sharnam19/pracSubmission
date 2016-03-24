@@ -21,6 +21,7 @@
     <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
       <a href="#submissionForm" class="mdl-layout__tab is-active">Submission Page</a>
       <a href="#results" class="mdl-layout__tab">Results</a>
+      <a href="#notifications" class="mdl-layout__tab">Deadlines</a>
     </div>
   </header>
   
@@ -79,10 +80,28 @@
 
 				  </tbody>
 				</table>
-				
-
+		
   			</div>
-      	</div>
+      	
+      </section>
+      <section class="mdl-layout__tab-panel" id="notifications">
+      		<div class="page-content mdl-grid">
+				<div class="mdl-cell mdl-cell--4-col-desktop mdl-cell--12-col mdl-cell--4-offset-desktop">
+				<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+				  <thead>
+				    <tr>
+				      <th class="mdl-data-table__cell--non-numeric">Subject</th>
+				      <th>Practical Number</th>
+				      <th class="mdl-data-table__cell--non-numeric">Date Of Submission</th>
+				    </tr>
+				  </thead>
+				  <tbody id="notification_tablebody">
+					
+				  </tbody>
+				</table>
+				</div>
+		
+  			</div>
       </section>
     
   </main>
@@ -108,34 +127,31 @@
 						$("#subjectresult").val(data[0].course_id).change();
 					}
 				});
+				$.ajax({
+					url:'/notifications/141070098',
+					type:'GET',
+					success:function(data){
+						$("#notification_tablebody").empty();
+						data.map(function(item){
+							var date=new Date(''+item.submission_date);
+							$("#notification_tablebody").append("<tr><td>"+item.course_name+"</td><td>"+item.practical_no+
+								"</td><td>"+(date.getDate()+'-'+(date.getMonth()+1)+'-'+date.getFullYear())
+								+"</td></tr>");
+						});
+					}
+				});
 				$("#subject").change(function(){
 					$.ajax({
 						url:'/practicals/'+$("#subject").val()+"&141070098",
 						type:'GET',
 						success:function(data){
+							$("#practicalNumber").empty();
 							data.map(function(item){
-								$("#practicalNumber").empty();
-									var i,j;
-									if(item.practical_number==null && item.practical_count===0){
-										$("#practicalNumber").append('<option value=``>No Practicals For Submission</option>');	
-									}else{
-										if(item.practical_number==null){
-											i=1;
-										}else{
-											i=item.practical_number+1;	
-										}		
-										j=i;
-							
-										if(i<=item.practical_count){
-											for(i;i<=item.practical_count;i++){
-												$("#practicalNumber").append("<option value='"+i+"'>"+i+"</option>");	
-											}
-											$("#practicalNumber").val(j).change();		
-										}else{
-											$("#practicalNumber").append('<option value=``>All Submitted</option>');
-										}
-									}
+								$("#practicalNumber").append("<option value='"+item.practical_no+"'>"+item.practical_no+"</option>");
+							},function(){
+								$("#practicalNumber").val(data[0].practical_number).change();	
 							});
+							
 						}
 					});
 				});

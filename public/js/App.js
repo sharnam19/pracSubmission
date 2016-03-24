@@ -19244,7 +19244,9 @@ var ResultItem=React.createClass({displayName: "ResultItem",
         };
     },
 	clicked:function(){
-		window.location=this.props.item.file_path;
+		var file_path=this.props.item.file_path;
+		file_path=file_path.split('/').join('_');
+		window.open('asset/'+file_path, '_blank'); 
 	},
 	buttonClicked:function(){
 		this.setState({stateButtonClicked:true});
@@ -19312,10 +19314,16 @@ var ResultItem=React.createClass({displayName: "ResultItem",
 		    	);
 		}
 		var date=new Date(''+this.props.item.date);
-		
+		var date1=new Date(''+this.props.item.submission_date);
+		var type;
+		if(date1>=date){
+			type=" timelySubmission ";
+		}else if(date>date1){
+			type=" lateSubmission ";
+		}
  		return(
 			React.createElement("div", {className: "mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-phone mdl-cell--4-col-tablet"}, 
-				React.createElement("div", {className: "resultItem", onClick: this.clicked}, 
+				React.createElement("div", {className: "resultItem"+type, onClick: this.clicked}, 
 					React.createElement("div", {className: "resultImage"}, 
 						React.createElement("img", {id: "img", src: "images/fileicon.png"})
 					), 

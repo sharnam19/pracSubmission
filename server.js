@@ -135,10 +135,9 @@ app.post('/update/:practical_id&:student_id&:marks',function(req,res){
 	var query='UPDATE submissions SET marks=? WHERE practical_id=? AND student_id=?';
 	connection.query(query,[req.params.marks,req.params.practical_id,req.params.student_id],function(err,rows){
 		if(err){
-			res.send('err');
+			res.json('err');
 		}else{
 			res.json(rows);
-			
 		}
 	});
 });
@@ -150,8 +149,9 @@ app.get('/results/:course_id&:practical_number&:filter',function(req,res){
 	}else if(req.params.filter==="Checked"){
 		filter=" AND marks>0 ";
 	}
-	var query="SELECT student_id,file_path,marks,date,practical_id FROM submissions WHERE practical_id= "+
-		"(SELECT id FROM practicals WHERE course_id=? AND practical_no=?)"+filter+" ORDER BY student_id";
+	// var query="SELECT student_id,file_path,marks,date,practical_id FROM submissions WHERE practical_id= "+
+	// 	"(SELECT id FROM practicals WHERE course_id=? AND practical_no=?)"+filter+" ORDER BY student_id";
+	var query="SELECT practical_id,submission_date,student_id,date,file_path,marks FROM practicals,submissions WHERE course_id=? AND practical_no=? AND id=practical_id "+filter+" ORDER BY student_id;"
 	connection.query(query,[req.params.course_id,req.params.practical_number],function(err,rows){
 		if(err) 
 			throw err;
@@ -159,12 +159,29 @@ app.get('/results/:course_id&:practical_number&:filter',function(req,res){
 	});
 });
 
+app.get('/notifications/:student_id',function(req,res){
+	var query="SELECT id as practical_id,practicals.course_id,course_name,practical_no,submission_date "+
+		" FROM practicals,courses WHERE practicals.course_id IN (SELECT distinct(course_id) FROM `courses` "+ 
+				" WHERE sem_dept_id IN (SELECT sem_dept_id FROM student WHERE id=?))"+
+				" AND id NOT IN (SELECT practical_id FROM submissions "+
+                " WHERE student_id=?) AND courses.course_id=practicals.course_id ";
+    connection.query(query,[req.params.student_id,req.params.student_id],function(err,rows){
+    	if(err){
+    		throw err;
+    	}else{
+    		res.json(rows);
+    	}
+    });
+
+});
+
 app.get('/practicals/:course_id&:student_id',function(req,res){
 	var query='SELECT `practical_count`, MAX(`practical_no`) as `practical_number` FROM `courses`'+
 	'join practicals on courses.course_id=practicals.course_id '+ 
 	'join submissions on practical_id=practicals.id WHERE courses.course_id=?  AND submissions.student_id=?';
 	
-	connection.query(query,[req.params.course_id,req.params.student_id], function(err, rows) {
+	var query1='SELECT id,practical_no FROM practicals WHERE course_id=? AND id NOT IN (SELECT practical_id FROM submissions WHERE student_id=?)';
+	connection.query(query1,[req.params.course_id,req.params.student_id], function(err, rows) {
 	  
 	  if(err){
 	  	return res.json(err);
@@ -268,10 +285,13 @@ app.post('/practical',function(req,res){
 	}	
 });
 
-app.get('/asset', function(req, res){
-  var tempFile="./files/Experiment 8 - Introduction to Wireshark.docx";
+app.get('/asset/:file_path', function(req, res){
+  var tempFile=req.params.file_path;
+  // console.log("Paramter---"+tempFile);
+  tempFile=tempFile.split('_').join('/');
+  // console.log(tempFile);
   fs.readFile(tempFile, function (err,data){
-     res.contentType("application/ms-word");
+     res.contentType("application/pdf");
      res.send(data);
   });
 });
