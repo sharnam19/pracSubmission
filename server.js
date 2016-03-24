@@ -61,25 +61,29 @@ app.post('/send',upload.single('files'),function (req,res) {
 			var path='./files/141070098/';			
 			connection.query(query,[req.body.subject],function(err,result){
 				path+=convertToRoman(result[0].sem)+'/'+result[0].course_name+'/';
-				mkdirp(path);	
+				mkdirp(path);
+				fs.rename(req.file.path,path+req.file.originalname,function(error){
+					if(error){
+						deleteFile(req.file.path);
+						setTimeout(function(){
+						    res.redirect('/studentpage.html');	
+						},1000);
+					}else{
+						var query="INSERT INTO submissions (student_id,file_path,practical_id,date) VALUES (?,?, "+
+								   "(SELECT id FROM practicals WHERE course_id=? and practical_no=?),?)";		
+						connection.query(query,['141070098',path+req.file.originalname,req.body.subject,req.body.practicalNumber,new Date()],function(err,result){
+							if(err){
+								deleteFile(path+req.file.originalname);			
+							}else{
+								setTimeout(function(){
+									res.redirect('/studentpage.html');	
+								},1000);
+							}
+						});
+					}	
+				});	
 			});
-
-			fs.rename(req.file.path,path+req.file.originalname,function(error){
-				if(error){
-					deleteFile(req.file.path);			
-					res.send("Failed");
-				}else{
-					var query="INSERT INTO submissions (student_id,file_path,practical_id,date) VALUES (?,?,getDate(), "+
-							   "(SELECT id FROM practicals WHERE course_id=? and practical_no=?))";		
-					connection.query(query,['141070098',path+req.file.originalname,req.body.subject,req.body.practicalNumber],function(err,result){
-						if(err){
-							deleteFile(path+req.file.originalname);			
-						}else{
-							res.json(result);	
-						}
-					});
-				}	
-			}); 
+		
 		}
 });	
 
@@ -139,9 +143,15 @@ app.post('/update/:practical_id&:student_id&:marks',function(req,res){
 	});
 });
 
-app.get('/results/:course_id&:practical_number',function(req,res){
-	var query="SELECT student_id,file_path,marks,date,practical_id	FROM submissions WHERE practical_id= "+
-		"(SELECT id FROM practicals WHERE course_id=? AND practical_no=?)";
+app.get('/results/:course_id&:practical_number&:filter',function(req,res){
+	var filter=" ";
+	if(req.params.filter==="Unchecked"){
+		filter=" AND marks=0 ";
+	}else if(req.params.filter==="Checked"){
+		filter=" AND marks>0 ";
+	}
+	var query="SELECT student_id,file_path,marks,date,practical_id FROM submissions WHERE practical_id= "+
+		"(SELECT id FROM practicals WHERE course_id=? AND practical_no=?)"+filter+" ORDER BY student_id";
 	connection.query(query,[req.params.course_id,req.params.practical_number],function(err,rows){
 		if(err) 
 			throw err;
@@ -199,8 +209,22 @@ app.get('/sub_cnt/:teacher_id',function(req,res){
 	});
 });
 
+app.get('/practicalresults/:student_id&:course_id',function(req,res){
+	var query="SELECT C.course_name as name,P.practical_no as pracNumber,S.marks as marks "+
+			"FROM courses as C,practicals as P,submissions as S "+
+			"WHERE S.student_id=? AND S.practical_id=P.id AND P.course_id=? "+
+			"AND C.course_id=? ";
+	connection.query(query,[req.params.student_id,req.params.course_id,req.params.course_id],function(err,rows){
+		if(err){
+			res.send(err);
+		}else{
+			res.json(rows);
+		}
+	});
+});
+
 app.get('/practicalcount/:course_id',function(req,res){
-	var query="SELECT practical_count FROM `courses` where course_id=?";
+	var query="SELECT practical_count FROM courses where course_id=?";
 	connection.query(query,[req.params.course_id], function(err, rows) {
 	  
 	  if(err){
@@ -228,9 +252,12 @@ app.post('/practical',function(req,res){
 	var query="INSERT INTO practicals (submission_date,question,course_id,practical_no) "+
 	"SELECT ?,?,course_id,(practical_count+1) FROM courses where course_id=? ";
 	connection.query(query,[req.body.submissionDate,req.body.question,req.body.course], function(err, result) {
-	  if (err) throw err;
+	  if (err){
+	  	res.json({'code':'Error'});
+	  }else{
 	  	updatePractical();
-	  	res.json(result);
+	  	res.json({'code':'Success'});
+	  }
 	});
 			
 	function updatePractical(){

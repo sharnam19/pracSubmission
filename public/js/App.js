@@ -19045,7 +19045,8 @@ var CheckingPage=React.createClass({displayName: "CheckingPage",
 		return{
 			data:null,
 			activePosition:-1,
-			activePractical:-1
+			activePractical:-1,
+			activeFilter:'All'
 		}
 	},
 	componentDidMount:function(){
@@ -19078,6 +19079,9 @@ var CheckingPage=React.createClass({displayName: "CheckingPage",
 	},
 	practicalChange:function(event){
 		this.setState({activePractical:parseInt(event.target.value)});
+	},
+	filterChange:function(event){
+		this.setState({activeFilter:event.target.value});
 	},
 	render:function(){
 		var courseNames=null;
@@ -19115,30 +19119,55 @@ var CheckingPage=React.createClass({displayName: "CheckingPage",
 		if(this.state.activePosition===-1 || this.state.activePractical===0){
 			res=React.createElement("h4", null, "NO Results")
 		}else{
-			res=React.createElement(Result, {courseId: this.state.data[this.state.activePosition].course_id, pracNumber: this.state.activePractical});
+			res=React.createElement(Result, {courseId: this.state.data[this.state.activePosition].course_id, 
+							pracNumber: this.state.activePractical, 
+								filter: this.state.activeFilter});
 		}
 		
 		return(
 			React.createElement("div", {className: "mdl-cell mdl-cell--12-col"}, 
-				React.createElement("div", {className: "mdl-cell mdl-cell--6-col-desktop mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--3-offset-desktop"}, 
-						React.createElement("form", {method: "post", id: "checkingform", encType: "application/x-www-form-urlencoded"}, 
+				
+					React.createElement("div", {className: "whiteBox mdl-cell mdl-cell--10-col-desktop mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--1-offset-desktop"}, 
+							React.createElement("form", {method: "post", id: "checkingform", encType: "application/x-www-form-urlencoded"}, 
+									
+								React.createElement("div", {className: "mdl-cell mdl-cell--10-col mdl-cell--1-offset-desktop mdl-textfield mdl-js-textfield mdl-textfield--floating-label"}, 
+									  React.createElement("select", {className: "mdl-textfield__input", id: "course", onChange: this.subjectChange, name: "course", value: value}, 
+									  	courseNames
+									  )
+								), 
 								
-							React.createElement("div", {className: "mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label"}, 
-								  React.createElement("select", {className: "mdl-textfield__input", id: "course", onChange: this.subjectChange, name: "course", value: value}, 
-								  	courseNames
-								  )
-							), 
-							
-							React.createElement("div", {className: "mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label"}, 
-								  React.createElement("select", {className: "mdl-textfield__input", id: "practicalNumber", onChange: this.practicalChange, name: "practicalNumber", value: this.state.activePractical}, 
-								  	practicalCount
-								  )
+								React.createElement("div", {className: "mdl-cell mdl-cell--10-col mdl-cell--1-offset-desktop mdl-textfield mdl-js-textfield mdl-textfield--floating-label"}, 
+									  React.createElement("select", {className: "mdl-textfield__input", id: "practicalNumber", onChange: this.practicalChange, name: "practicalNumber", value: this.state.activePractical}, 
+									  	practicalCount
+									  )
+								), 
+
+								React.createElement("label", {className: "mdl-cell mdl-cell--3-col-desktop mdl-cell--1-offset-desktop mdl-radio mdl-js-radio mdl-js-ripple-effect", 
+										htmlFor: "option-1"}, 
+								  React.createElement("input", {onChange: this.filterChange, id: "option-1", type: "radio", 
+								  		className: "mdl-radio__button", name: "options", value: "All", checked: true}), 
+								  React.createElement("span", {className: "mdl-radio__label"}, "All")
+								), 
+								
+								React.createElement("label", {className: "mdl-cell mdl-cell--3-col-desktop mdl-cell--1-offset-desktop mdl-radio mdl-js-radio mdl-js-ripple-effect", 
+										htmlFor: "option-2"}, 
+								  React.createElement("input", {onChange: this.filterChange, id: "option-2", type: "radio", 
+								  		className: "mdl-radio__button", name: "options", value: "Checked"}), 
+								  React.createElement("span", {className: "mdl-radio__label"}, "Checked")
+								), 
+								
+								React.createElement("label", {className: "mdl-cell mdl-cell--3-col-desktop mdl-cell--1-offset-desktop mdl-radio mdl-js-radio mdl-js-ripple-effect", 
+										 htmlFor: "option-3"}, 
+								  React.createElement("input", {onChange: this.filterChange, id: "option-3", type: "radio", 
+								  		className: "mdl-radio__button", name: "options", value: "Unchecked"}), 
+								  React.createElement("span", {className: "mdl-radio__label"}, "Unchecked")
+								)
 							)
-						)
-				), 
-				React.createElement("div", {className: "mdl-cell--12-col-desktop mdl-cell--4-col-phone mdl-cell--8-col-tablet"}, 
-					res
-				)
+					), 
+					React.createElement("div", {className: "whiteBox mdl-cell mdl-cell--10-col-desktop mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--1-offset-desktop"}, 
+						res
+					)
+				
 			)
 			
 
@@ -19161,18 +19190,18 @@ var Result=React.createClass({displayName: "Result",
 		}
 	},
 	componentDidMount:function(){
-		this.serverRequest = $.get('/results/'+this.props.courseId+'&'+this.props.pracNumber, function (result) {
+		this.serverRequest = $.get('/results/'+this.props.courseId+'&'+this.props.pracNumber+'&'+this.props.filter, function (result) {
 				this.setState({
 	        		data:result
 	     		 });			
 	    }.bind(this));
 	},
 	componentWillReceiveProps:function(nextProps){
-		this.serverRequest = $.get('/results/'+nextProps.courseId+'&'+nextProps.pracNumber, function (result) {
+		this.serverRequest = $.get('/results/'+nextProps.courseId+'&'+nextProps.pracNumber+'&'+nextProps.filter, function (result) {
 			this.setState({
 	    		data:result
-	 		 });			
-	    }.bind(this));	
+	 		});			
+	    }.bind(this));
 	},
 	render:function(){
 		var resultItems=React.createElement("h4", null, "No Results To Show");
@@ -19180,8 +19209,10 @@ var Result=React.createClass({displayName: "Result",
 			resultItems=this.state.data.map(function(item,i){
 				return(
 					React.createElement(ResultItem, {key: i, item: item})
-				);
+				);	
 			});	
+		}else{
+			resultItems=React.createElement("h4", null, "No Results To Show");
 		}
 		
 		return(
@@ -19194,13 +19225,13 @@ var Result=React.createClass({displayName: "Result",
 	}
 });
 
-var item={
-	"file_path":"Hello",
-	"marks":5,
-	"student_id":"141070098",
-	"practical_id":1,
-	"date":"24/02/2016"
-}
+// var item={
+// 	"file_path":"Hello",
+// 	"marks":5,
+// 	"student_id":"141070098",
+// 	"practical_id":1,
+// 	"date":"24/02/2016"
+// }
 module.exports=Result;
 },{"./Results/ResultItem.jsx":162,"react":158,"react-dom":2}],162:[function(require,module,exports){
 var React=require('react');
@@ -19225,7 +19256,7 @@ var ResultItem=React.createClass({displayName: "ResultItem",
 		componentHandler.upgradeDom();
 	},
 	updateMarks:function(event){
-			this.setState({value:event.target.value});
+		this.setState({value:event.target.value});
 	},
 	changeMarks:function(){
 		$.ajax({
@@ -19271,11 +19302,11 @@ var ResultItem=React.createClass({displayName: "ResultItem",
 		var mydiv;
 		
 		if(this.state.stateButtonClicked===false){
-			mydiv=React.createElement("button", {className: "mdl-cell mdl-cell--12-col mdl-js-ripple-effect mdl-button mdl-js-button resultButton", onClick: this.buttonClicked}, "Grade");
+			mydiv=React.createElement("button", {className: "mdl-cell mdl-cell--12-col mdl-js-ripple-effect mdl-button mdl-js-button mdl-button--raised resultButton", onClick: this.buttonClicked}, "Grade");
 		}else{
 			mydiv=
 				React.createElement("div", {className: "mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label"}, 
-			    	React.createElement("input", {onChange: this.updateMarks, onBlur: this.changeMarks, className: "mdl-textfield__input", type: "Number", ref: "input", id: this.props.item.file_path, value: this.state.value}), 
+			    	React.createElement("input", {onChange: this.updateMarks, onBlur: this.changeMarks, className: "mdl-textfield__input", type: "Number", ref: "input", id: this.props.item.student_id, value: this.state.value}), 
 			    	React.createElement("label", {className: "mdl-textfield__label", htmlFor: this.props.item.file_path}, "Grade"), 
 			    	React.createElement("span", {className: "mdl-textfield__error"}, "Invalid")
 		    	);
@@ -19283,16 +19314,16 @@ var ResultItem=React.createClass({displayName: "ResultItem",
 		var date=new Date(''+this.props.item.date);
 		
  		return(
-			React.createElement("div", {className: "mdl-cell mdl-cell--2-col-desktop mdl-cell--2-col-phone mdl-cell--2-col-tablet"}, 
+			React.createElement("div", {className: "mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-phone mdl-cell--4-col-tablet"}, 
 				React.createElement("div", {className: "resultItem", onClick: this.clicked}, 
 					React.createElement("div", {className: "resultImage"}, 
-						React.createElement("img", {id: "img", src: "images/fileicon_black.png"})
+						React.createElement("img", {id: "img", src: "images/fileicon.png"})
 					), 
 					React.createElement("div", {className: "resultDetails"}, 
 						React.createElement("div", null, 
 							React.createElement("b", null, this.props.item.student_id), 
 							React.createElement("br", null), 
-							React.createElement("b", null, date.getDate()+'-'+this.getMonth(date.getMonth())+'-'+date.getFullYear()), 
+							React.createElement("b", null, date.getDate()+'-'+(date.getMonth()+1)+'-'+date.getFullYear()), 
 							React.createElement("br", null), 
 							React.createElement("b", null, this.state.value)
 						)

@@ -11,7 +11,7 @@
 	
 	<body>
 	
-		<form id="myform" enctype="multipart/form-data" method="post" action="/send">
+		<form id="myform" enctype="multipart/form-data" action="/send" method="post">
 				
 				<div>
 					<div class="mdl-textfield mdl-js-textfield">
@@ -36,7 +36,7 @@
 		    <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="mybutton1" value="submit">Submit</button>
 
 		</form>
-		
+
 		<script src="js/jquery-2.2.0.min.js"></script>
 		<script type="text/javascript" src="js/material.min.js"></script>
 		
@@ -85,7 +85,27 @@
 							});
 						}
 					});
-				});	
+				});
+			/*	$("#myform").submit(function(){
+					$.ajax({
+					url:'/send',
+					type:'POST',
+					data:$("#myform").serialize(),
+					success:function(data){
+						if(data=='Upload Failed'){
+							var data = {message: 'Upload Failed'};
+    						snackbarContainer.MaterialSnackbar.showSnackbar(data);
+    						$("#myform").reset();
+						}else{
+							var data = {message: 'Upload Successful'};
+    						snackbarContainer.MaterialSnackbar.showSnackbar(data);
+    						$("#myform").reset();
+						}
+					}
+					});
+					return false;
+				});*/
+				
 			});
 
 		</script>

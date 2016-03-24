@@ -9,18 +9,18 @@ var Result=React.createClass({
 		}
 	},
 	componentDidMount:function(){
-		this.serverRequest = $.get('/results/'+this.props.courseId+'&'+this.props.pracNumber, function (result) {
+		this.serverRequest = $.get('/results/'+this.props.courseId+'&'+this.props.pracNumber+'&'+this.props.filter, function (result) {
 				this.setState({
 	        		data:result
 	     		 });			
 	    }.bind(this));
 	},
 	componentWillReceiveProps:function(nextProps){
-		this.serverRequest = $.get('/results/'+nextProps.courseId+'&'+nextProps.pracNumber, function (result) {
+		this.serverRequest = $.get('/results/'+nextProps.courseId+'&'+nextProps.pracNumber+'&'+nextProps.filter, function (result) {
 			this.setState({
 	    		data:result
-	 		 });			
-	    }.bind(this));	
+	 		});			
+	    }.bind(this));
 	},
 	render:function(){
 		var resultItems=<h4>No Results To Show</h4>;
@@ -28,8 +28,10 @@ var Result=React.createClass({
 			resultItems=this.state.data.map(function(item,i){
 				return(
 					<ResultItem key={i} item={item}/>
-				);
+				);	
 			});	
+		}else{
+			resultItems=<h4>No Results To Show</h4>;
 		}
 		
 		return(
@@ -42,13 +44,13 @@ var Result=React.createClass({
 	}
 });
 
-var item={
-	"file_path":"Hello",
-	"marks":5,
-	"student_id":"141070098",
-	"practical_id":1,
-	"date":"24/02/2016"
-}
+// var item={
+// 	"file_path":"Hello",
+// 	"marks":5,
+// 	"student_id":"141070098",
+// 	"practical_id":1,
+// 	"date":"24/02/2016"
+// }
 module.exports=Result;
 
 

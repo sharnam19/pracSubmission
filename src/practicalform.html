@@ -28,32 +28,30 @@
     <section class="mdl-layout__tab-panel is-active" id="practicalform">
       <div class="page-content">
       
-		<form method="post" id="practicalForm" action="/practical" enctype="application/x-www-form-urlencoded">
+		<form id="practicalForm">
 			
 			<div class="mdl-grid">
+				<div class="mdl-cell mdl-cell--10-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-cell--1-offset-desktop whiteBox">
+					<div class="mdl-cell mdl-cell--5-col-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+						  <select class="mdl-textfield__input" id="course" name="course">
+						  </select>
+					</div>
 				
-				<div class="mdl-cell mdl-cell--4-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-					  <select class="mdl-textfield__input" id="course" name="course">
-					  </select>
-				</div>
-				
-				<div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		    		<textarea class="mdl-textfield__input" type="text" name="question" id="question" cols="80" rows="2"></textarea>
-					<label class="mdl-textfield__label" for="question">Type The Question</label>
-				</div>
-				
-				<div class="mdl-cell mdl-cell--6-col">
-					<div class="mdl-cell mdl-cell--3-col mdl-textfield mdl-js-textfield">
+					<div class="mdl-cell mdl-cell--5-col-desktop mdl-cell--2-offset-desktop mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-textfield mdl-js-textfield">
 						<input class="mdl-textfield__input" type="date" id="submissionDate" name="submissionDate"/>
 					</div>
+				
+					
+					<div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+			    		<textarea class="mdl-textfield__input" type="text" name="question" id="question" cols="80" rows="2"></textarea>
+						<label class="mdl-textfield__label" for="question">Type The Question</label>
+					</div>
+				
+					<div class="mdl-cell mdl-cell--12-col">
+						<button type="submit" value="Submit" class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect">Start A New Practical</button>
+					</div>
 				</div>
-
-				<div class="mdl-cell mdl-cell--12-col">
-					<button type="submit" value="Submit" class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect">Start A New Practical</button>
-				</div>
-			
-			</div> 
-
+			</div>
 		</form>
 
       </div>
@@ -71,7 +69,7 @@
 
 
 	<script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
-	<script type="text/javascript" src="js/material.js"></script>
+	<script type="text/javascript" src="js/material.min.js"></script>
 	<script type="text/javascript" src="js/App.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
@@ -84,7 +82,26 @@
 						$("#course").append("<option value='"+item.course_id+"'>"+item.course_name+"</option>");
 					});
 				}
-			});	
+			});
+
+			$("#practicalForm").submit(function(){
+				$.ajax({
+					url:'/practical',
+					type:'POST',
+					data:$("#practicalForm").serialize(),
+					success:function(data){
+						
+						if(data.code==="Error"){
+							 alert("Error,try later");
+						}else{
+							alert("Successful Submission");
+						}	
+						$("#practicalForm")[0].reset();
+					}
+				});
+				return false;
+			});
+
 		});
 	</script>
 

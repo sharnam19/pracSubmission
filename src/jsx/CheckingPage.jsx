@@ -5,7 +5,8 @@ var CheckingPage=React.createClass({
 		return{
 			data:null,
 			activePosition:-1,
-			activePractical:-1
+			activePractical:-1,
+			activeFilter:'All'
 		}
 	},
 	componentDidMount:function(){
@@ -38,6 +39,9 @@ var CheckingPage=React.createClass({
 	},
 	practicalChange:function(event){
 		this.setState({activePractical:parseInt(event.target.value)});
+	},
+	filterChange:function(event){
+		this.setState({activeFilter:event.target.value});
 	},
 	render:function(){
 		var courseNames=null;
@@ -75,30 +79,55 @@ var CheckingPage=React.createClass({
 		if(this.state.activePosition===-1 || this.state.activePractical===0){
 			res=<h4>NO Results</h4>
 		}else{
-			res=<Result courseId={this.state.data[this.state.activePosition].course_id} pracNumber={this.state.activePractical}/>;
+			res=<Result courseId={this.state.data[this.state.activePosition].course_id} 
+							pracNumber={this.state.activePractical} 
+								filter={this.state.activeFilter}/>;
 		}
 		
 		return(
 			<div className="mdl-cell mdl-cell--12-col">
-				<div className="mdl-cell mdl-cell--6-col-desktop mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--3-offset-desktop">
-						<form method="post" id="checkingform" encType="application/x-www-form-urlencoded">
+				
+					<div className="whiteBox mdl-cell mdl-cell--10-col-desktop mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--1-offset-desktop">
+							<form method="post" id="checkingform" encType="application/x-www-form-urlencoded">
+									
+								<div className="mdl-cell mdl-cell--10-col mdl-cell--1-offset-desktop mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+									  <select className="mdl-textfield__input" id="course" onChange={this.subjectChange} name="course" value={value}>
+									  	{courseNames}
+									  </select>
+								</div>
 								
-							<div className="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-								  <select className="mdl-textfield__input" id="course" onChange={this.subjectChange} name="course" value={value}>
-								  	{courseNames}
-								  </select>
-							</div>
-							
-							<div className="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-								  <select className="mdl-textfield__input" id="practicalNumber" onChange={this.practicalChange} name="practicalNumber" value={this.state.activePractical}>
-								  	{practicalCount}
-								  </select>
-							</div>
-						</form>
-				</div>
-				<div className="mdl-cell--12-col-desktop mdl-cell--4-col-phone mdl-cell--8-col-tablet">
-					{res}
-				</div>
+								<div className="mdl-cell mdl-cell--10-col mdl-cell--1-offset-desktop mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+									  <select className="mdl-textfield__input" id="practicalNumber" onChange={this.practicalChange} name="practicalNumber" value={this.state.activePractical}>
+									  	{practicalCount}
+									  </select>
+								</div>
+
+								<label className="mdl-cell mdl-cell--3-col-desktop mdl-cell--1-offset-desktop mdl-radio mdl-js-radio mdl-js-ripple-effect" 
+										htmlFor="option-1">
+								  <input onChange={this.filterChange} id="option-1" type="radio" 
+								  		className="mdl-radio__button" name="options" value="All" checked/>
+								  <span className="mdl-radio__label">All</span>
+								</label>
+								
+								<label className="mdl-cell mdl-cell--3-col-desktop mdl-cell--1-offset-desktop mdl-radio mdl-js-radio mdl-js-ripple-effect" 
+										htmlFor="option-2">
+								  <input onChange={this.filterChange} id="option-2" type="radio" 
+								  		className="mdl-radio__button" name="options" value="Checked"/>
+								  <span className="mdl-radio__label">Checked</span>
+								</label>
+								
+								<label className="mdl-cell mdl-cell--3-col-desktop mdl-cell--1-offset-desktop mdl-radio mdl-js-radio mdl-js-ripple-effect"
+										 htmlFor="option-3">
+								  <input onChange={this.filterChange} id="option-3" type="radio" 
+								  		className="mdl-radio__button" name="options" value="Unchecked"/>
+								  <span className="mdl-radio__label">Unchecked</span>
+								</label>
+							</form>
+					</div>
+					<div className="whiteBox mdl-cell mdl-cell--10-col-desktop mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--1-offset-desktop">
+						{res}
+					</div>
+				
 			</div>
 			
 
