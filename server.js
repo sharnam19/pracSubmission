@@ -3,12 +3,15 @@ var app=express();
 var multer=require('multer');
 var upload=multer({dest:'./files/'});
 var fs=require('fs');
+var cookieSession=require('cookie-session');
 var PORT=3000;
 var bodyParser=require('body-parser');	
 app.use( bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 })); 
+app.use(cookieSession({name:'session',
+		keys:['key1','key2']}));
 var mysql=require('mysql');
 var mkdirp=require('node-mkdirp');
 
@@ -18,6 +21,15 @@ var connection = mysql.createConnection({
   password : '',
   database : 'project'
 });
+
+function checkAuth(req, res, next) {
+	console.log(req.session.user_id+" "+req.params.student_id);
+  if (!req.session.user_id || req.params.student_id!==req.session.user_id) {
+    res.redirect("/");
+  } else {
+    next();
+  }
+}
 
 function deleteFile(path){
 	fs.stat(path,function(err,stats){
@@ -85,7 +97,14 @@ app.post('/send',upload.single('files'),function (req,res) {
 			});
 		
 		}
-});	
+});
+
+app.get('/logout',function(req,res){
+	if(req.session!==null){
+		req.session=null;
+	}
+	res.redirect('/');
+});
 
 app.post('/register',function (req,res){
 	var query='INSERT INTO student(id,password,first_name,last_name,sem_dept_id) VALUES (?,?,?,?,'+
@@ -103,12 +122,14 @@ app.post('/register',function (req,res){
 });
 
 app.post('/login',function (req,res){
+	
 	connection.query('SELECT password FROM `student` where id=?',[req.body.registrationNumber], function(err, rows) {
 	  if (err) throw err;
 	  if(rows.length===0){
 	  	 res.json("No such user exists");
 	  }else{
 	  	if(rows[0].password===req.body.password){
+	  		 req.session.user_id=req.body.registrationNumber;
 	  		 res.json("Logged In");	
 	  	}else{
 		  	 res.json("Failed to Login");
@@ -118,12 +139,14 @@ app.post('/login',function (req,res){
 });
 
 app.post('/teacherlogin',function (req,res){
+
 	connection.query('SELECT password FROM `teacher` where id=?',[req.body.registrationNumber], function(err, rows) {
 	  if (err) throw err;
 	  if(rows.length===0){
 	  	res.json("No such user exists");
 	  }else{
 	  	if(rows[0].password===req.body.password){
+	  		 req.session.teacher_id=req.body.registrationNumber;
 	  		 res.json("Logged In");	
 	  	}else{
 		  	 res.json("Failed to Login");
@@ -159,7 +182,7 @@ app.get('/results/:course_id&:practical_number&:filter',function(req,res){
 	});
 });
 
-app.get('/notifications/:student_id',function(req,res){
+app.get('/notifications/:student_id',checkAuth,function(req,res){
 	var query="SELECT id as practical_id,practicals.course_id,course_name,practical_no,submission_date "+
 		" FROM practicals,courses WHERE practicals.course_id IN (SELECT distinct(course_id) FROM `courses` "+ 
 				" WHERE sem_dept_id IN (SELECT sem_dept_id FROM student WHERE id=?))"+
